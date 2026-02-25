@@ -46,6 +46,16 @@ jobs:
       - name: Initialize OpenCode DB
         run: opencode session list || true
 
+      - name: Decrypt .env
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+        run: |
+          if [ -f .env.enc ]; then
+            openssl enc -aes-256-cbc -d -pbkdf2 -in .env.enc -out .env -pass env:ENCRYPTION_KEY
+          else
+            touch .env
+          fi
+
       - name: Run agent
         env:
           AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
@@ -57,9 +67,7 @@ jobs:
           AGENTMAIL_INBOX_ID: ${{ secrets.AGENTMAIL_INBOX_ID }}
           CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-          PREPAID_CARD_NUMBER: ${{ secrets.PREPAID_CARD_NUMBER }}
-          PREPAID_CARD_CVV: ${{ secrets.PREPAID_CARD_CVV }}
-          PREPAID_CARD_EXPIRY: ${{ secrets.PREPAID_CARD_EXPIRY }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           X_USERNAME: ${{ secrets.X_USERNAME }}
           X_PASSWORD: ${{ secrets.X_PASSWORD }}
           LINKEDIN_USERNAME: ${{ secrets.LINKEDIN_USERNAME }}
@@ -67,4 +75,23 @@ jobs:
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode run "Test two scripts: 1) Run scripts/check_vercel_gateway_balance.py and verify it prints the credit balance and usage. 2) Run scripts/send_mail_with_agentmail.py by sending a short test email to the CREATOR_EMAIL env var with subject 'Agent Test' and a brief body saying hello."
+          opencode run "Test the .env system: 1) Read .env and print its contents. 2) Add the line HELLO=world to .env. 3) Read .env again to confirm it was written."
+
+      - name: Encrypt .env if changed
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+        run: |
+          if [ -f .env ]; then
+            openssl enc -aes-256-cbc -pbkdf2 -in .env -out .env.enc.new -pass env:ENCRYPTION_KEY
+            if [ -f .env.enc ]; then
+              if ! diff -q .env.enc .env.enc.new > /dev/null 2>&1; then
+                mv .env.enc.new .env.enc
+                git add .env.enc && git commit -m "Update encrypted .env" && git push
+              else
+                rm .env.enc.new
+              fi
+            else
+              mv .env.enc.new .env.enc
+              git add .env.enc && git commit -m "Add encrypted .env" && git push
+            fi
+          fi

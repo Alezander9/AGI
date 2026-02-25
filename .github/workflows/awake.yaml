@@ -21,33 +21,18 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_PAT }}
 
+      - name: Install OpenCode
+        run: |
+          curl -fsSL https://opencode.ai/install | bash
+          echo "$HOME/.opencode/bin" >> $GITHUB_PATH
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          pip install opencode-ai
-          pip install browser-use
-          pip install requests
-
-      - name: Write KEYS.env
-        run: |
-          cat <<EOF > KEYS.env
-          OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
-          VERCEL_AI_GATEWAY_KEY=${{ secrets.VERCEL_AI_GATEWAY_KEY }}
-          GITHUB_PAT=${{ secrets.GITHUB_PAT }}
-          BROWSER_USE_API_KEY=${{ secrets.BROWSER_USE_API_KEY }}
-          GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
-          PREPAID_CARD_NUMBER=${{ secrets.PREPAID_CARD_NUMBER }}
-          PREPAID_CARD_CVV=${{ secrets.PREPAID_CARD_CVV }}
-          PREPAID_CARD_EXPIRY=${{ secrets.PREPAID_CARD_EXPIRY }}
-          X_USERNAME=${{ secrets.X_USERNAME }}
-          X_PASSWORD=${{ secrets.X_PASSWORD }}
-          LINKEDIN_USERNAME=${{ secrets.LINKEDIN_USERNAME }}
-          LINKEDIN_PASSWORD=${{ secrets.LINKEDIN_PASSWORD }}
-          EOF
+      - name: Install Python dependencies
+        run: pip install browser-use requests
 
       - name: Configure git
         run: |
@@ -55,18 +40,21 @@ jobs:
           git config user.email "statefulagent@gmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git
 
-      - name: Load environment
+      - name: Configure OpenCode auth
         run: |
-          set -a
-          source KEYS.env
-          set +a
+          mkdir -p ~/.local/share/opencode
+          echo '{"vercel":{"apiKey":"${{ secrets.AI_GATEWAY_API_KEY }}"}}' > ~/.local/share/opencode/auth.json
+
+      - name: Initialize OpenCode DB
+        run: opencode session list || true
 
       - name: Run agent
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          VERCEL_AI_GATEWAY_KEY: ${{ secrets.VERCEL_AI_GATEWAY_KEY }}
+          AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
           BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
+          PARALLEL_API_KEY: ${{ secrets.PARALLEL_API_KEY }}
+          AGENTMAIL_API_KEY: ${{ secrets.AGENTMAIL_API_KEY }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           PREPAID_CARD_NUMBER: ${{ secrets.PREPAID_CARD_NUMBER }}
           PREPAID_CARD_CVV: ${{ secrets.PREPAID_CARD_CVV }}
@@ -75,9 +63,7 @@ jobs:
           X_PASSWORD: ${{ secrets.X_PASSWORD }}
           LINKEDIN_USERNAME: ${{ secrets.LINKEDIN_USERNAME }}
           LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+          OPENCODE_DISABLE_AUTOUPDATE: "true"
+          OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode -p "You are waking up. Read AGENTS.md for your instructions. Begin your wake-up routine."
-
-      - name: Cleanup secrets
-        if: always()
-        run: rm -f KEYS.env
+          opencode run "Say hello world. That is all."

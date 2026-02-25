@@ -75,7 +75,8 @@ jobs:
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode run "Test the .env system: 1) Read .env and print its contents. 2) Add the line HELLO=world to .env. 3) Read .env again to confirm it was written."
+          CURRENT_TIME=$(TZ='America/Los_Angeles' date '+%Y-%m-%d %H:%M %Z')
+          opencode run "Current time: $CURRENT_TIME. Test the .env system: 1) Read .env and print its contents. 2) Add the line HELLO=world to .env. 3) Read .env again to confirm it was written."
 
       - name: Encrypt .env if changed
         env:

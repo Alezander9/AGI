@@ -2,8 +2,8 @@ name: Awake
 
 on:
   schedule:
-    # Wake up every hour
-    - cron: '0 * * * *'
+    # Wake up every 4 hours
+    - cron: '0 */4 * * *'
   workflow_dispatch:
     # Allow manual trigger
 
@@ -13,7 +13,7 @@ permissions:
 jobs:
   wake-up:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository

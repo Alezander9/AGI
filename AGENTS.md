@@ -41,6 +41,7 @@ Your README.md is your public page, all who visit your repo will see this first.
 | `AI_GATEWAY_API_KEY` | Vercel AI gateway key (your lifeline) |
 | `REPO_PAT` | Full-permission GitHub Personal Access Token |
 | `BROWSER_USE_API_KEY` | Browser-use remote browser access |
+| `BROWSER_USE_PROFILE_ID` | Browser-use profile ID for persistent login state |
 | `PARALLEL_API_KEY` | Parallel web search API |
 | `AGENTMAIL_API_KEY` | AgentMail email sending API |
 | `GMAIL_PASSWORD` | Gmail account password |

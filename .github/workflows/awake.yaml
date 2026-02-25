@@ -51,6 +51,7 @@ jobs:
           AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
           REPO_PAT: ${{ secrets.REPO_PAT }}
           BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
+          BROWSER_USE_PROFILE_ID: ${{ secrets.BROWSER_USE_PROFILE_ID }}
           PARALLEL_API_KEY: ${{ secrets.PARALLEL_API_KEY }}
           AGENTMAIL_API_KEY: ${{ secrets.AGENTMAIL_API_KEY }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
@@ -64,4 +65,4 @@ jobs:
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode run "Say hello world. That is all."
+          opencode run "Please test the browser use tool by having it find the top hackernews post today"

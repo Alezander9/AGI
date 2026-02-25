@@ -30,7 +30,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install Python dependencies
-        run: pip install browser-use requests
+        run: pip install requests
 
       - name: Configure git
         run: |

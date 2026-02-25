@@ -54,6 +54,8 @@ jobs:
           BROWSER_USE_PROFILE_ID: ${{ secrets.BROWSER_USE_PROFILE_ID }}
           PARALLEL_API_KEY: ${{ secrets.PARALLEL_API_KEY }}
           AGENTMAIL_API_KEY: ${{ secrets.AGENTMAIL_API_KEY }}
+          AGENTMAIL_INBOX_ID: ${{ secrets.AGENTMAIL_INBOX_ID }}
+          CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           PREPAID_CARD_NUMBER: ${{ secrets.PREPAID_CARD_NUMBER }}
           PREPAID_CARD_CVV: ${{ secrets.PREPAID_CARD_CVV }}
@@ -65,4 +67,4 @@ jobs:
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode run "Test scripts/search_web_with_parallel.py by searching for 'top AI news today' and verify it returns results with titles, urls, and excerpts."
+          opencode run "Test two scripts: 1) Run scripts/check_vercel_gateway_balance.py and verify it prints the credit balance and usage. 2) Run scripts/send_mail_with_agentmail.py by sending a short test email to the CREATOR_EMAIL env var with subject 'Agent Test' and a brief body saying hello."

@@ -1,0 +1,83 @@
+name: Awake
+
+on:
+  schedule:
+    # Wake up every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  wake-up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install opencode-ai
+          pip install browser-use
+          pip install requests
+
+      - name: Write KEYS.env
+        run: |
+          cat <<EOF > KEYS.env
+          OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
+          VERCEL_AI_GATEWAY_KEY=${{ secrets.VERCEL_AI_GATEWAY_KEY }}
+          GITHUB_PAT=${{ secrets.GITHUB_PAT }}
+          BROWSER_USE_API_KEY=${{ secrets.BROWSER_USE_API_KEY }}
+          GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}
+          PREPAID_CARD_NUMBER=${{ secrets.PREPAID_CARD_NUMBER }}
+          PREPAID_CARD_CVV=${{ secrets.PREPAID_CARD_CVV }}
+          PREPAID_CARD_EXPIRY=${{ secrets.PREPAID_CARD_EXPIRY }}
+          X_USERNAME=${{ secrets.X_USERNAME }}
+          X_PASSWORD=${{ secrets.X_PASSWORD }}
+          LINKEDIN_USERNAME=${{ secrets.LINKEDIN_USERNAME }}
+          LINKEDIN_PASSWORD=${{ secrets.LINKEDIN_PASSWORD }}
+          EOF
+
+      - name: Configure git
+        run: |
+          git config user.name "Stateful Agent"
+          git config user.email "statefulagent@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git
+
+      - name: Load environment
+        run: |
+          set -a
+          source KEYS.env
+          set +a
+
+      - name: Run agent
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          VERCEL_AI_GATEWAY_KEY: ${{ secrets.VERCEL_AI_GATEWAY_KEY }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          PREPAID_CARD_NUMBER: ${{ secrets.PREPAID_CARD_NUMBER }}
+          PREPAID_CARD_CVV: ${{ secrets.PREPAID_CARD_CVV }}
+          PREPAID_CARD_EXPIRY: ${{ secrets.PREPAID_CARD_EXPIRY }}
+          X_USERNAME: ${{ secrets.X_USERNAME }}
+          X_PASSWORD: ${{ secrets.X_PASSWORD }}
+          LINKEDIN_USERNAME: ${{ secrets.LINKEDIN_USERNAME }}
+          LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+        run: |
+          opencode -p "You are waking up. Read AGENTS.md for your instructions. Begin your wake-up routine."
+
+      - name: Cleanup secrets
+        if: always()
+        run: rm -f KEYS.env

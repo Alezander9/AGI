@@ -65,4 +65,4 @@ jobs:
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
-          opencode run "Please test the browser use tool by having it find the top hackernews post today. After the task completes, verify the saved trace file in browser-use-traces/ exists and is comprehensive — it should contain all steps the agent took."
+          opencode run "Test scripts/search_web_with_parallel.py by searching for 'top AI news today' and verify it returns results with titles, urls, and excerpts."

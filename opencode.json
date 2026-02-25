@@ -24,7 +24,7 @@
         "skill": true,
         "todowrite": true,
         "todoread": true,
-        "webfetch": false,
+        "webfetch": true,
         "websearch": false,
         "question": false,
         "lsp": false

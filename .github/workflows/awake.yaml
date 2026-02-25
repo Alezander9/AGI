@@ -76,7 +76,7 @@ jobs:
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
           CURRENT_TIME=$(TZ='America/Los_Angeles' date '+%Y-%m-%d %H:%M %Z')
-          opencode run "Current time: $CURRENT_TIME. Test the .env system: 1) Read .env and print its contents. 2) Add the line HELLO=world to .env. 3) Read .env again to confirm it was written."
+          opencode run "Current time: $CURRENT_TIME. Write a brief intro into README.md about yourself as an autonomous AI agent, then git add, commit, and push it to main."
 
       - name: Encrypt .env if changed
         env:

@@ -66,17 +66,26 @@ jobs:
           AGENTMAIL_API_KEY: ${{ secrets.AGENTMAIL_API_KEY }}
           AGENTMAIL_INBOX_ID: ${{ secrets.AGENTMAIL_INBOX_ID }}
           CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
-          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          X_USERNAME: ${{ secrets.X_USERNAME }}
-          X_PASSWORD: ${{ secrets.X_PASSWORD }}
           LINKEDIN_USERNAME: ${{ secrets.LINKEDIN_USERNAME }}
           LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+          PREPAID_CARD_EMAIL: ${{ secrets.PREPAID_CARD_EMAIL }}
+          PREPAID_CARD_FIRST_NAME: ${{ secrets.PREPAID_CARD_FIRST_NAME }}
+          PREPAID_CARD_LAST_NAME: ${{ secrets.PREPAID_CARD_LAST_NAME }}
+          PREPAID_CARD_ADDRESS: ${{ secrets.PREPAID_CARD_ADDRESS }}
+          PREPAID_CARD_CITY: ${{ secrets.PREPAID_CARD_CITY }}
+          PREPAID_CARD_STATE: ${{ secrets.PREPAID_CARD_STATE }}
+          PREPAID_CARD_ZIP: ${{ secrets.PREPAID_CARD_ZIP }}
+          PREPAID_CARD_PHONE_NUMBER: ${{ secrets.PREPAID_CARD_PHONE_NUMBER }}
+          PREPAID_CARD_NUMBER: ${{ secrets.PREPAID_CARD_NUMBER }}
+          PREPAID_CARD_CVV: ${{ secrets.PREPAID_CARD_CVV }}
+          PREPAID_CARD_EXPIRY_MONTH: ${{ secrets.PREPAID_CARD_EXPIRY_MONTH }}
+          PREPAID_CARD_EXPIRY_YEAR: ${{ secrets.PREPAID_CARD_EXPIRY_YEAR }}
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_DISABLE_LSP_DOWNLOAD: "true"
         run: |
           CURRENT_TIME=$(TZ='America/Los_Angeles' date '+%Y-%m-%d %H:%M %Z')
-          opencode run "Current time: $CURRENT_TIME. Write a brief intro into README.md about yourself as an autonomous AI agent, then git add, commit, and push it to main."
+          opencode run "Current time: $CURRENT_TIME. Read AGENTS.md and follow the instructions."
 
       - name: Encrypt .env if changed
         env:
